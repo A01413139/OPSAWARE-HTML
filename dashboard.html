@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>OpsAware — Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:wght@300;400;500&display=swap"/>
+  <link rel="stylesheet" href="dashboard.css"/>
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="nav-left">
+      <div class="nav-logo">
+        <img src="logorockwell.png" alt="Logo" style="width:28px;height:28px;object-fit:contain;">
+      </div>
+      <span class="nav-title">OpsAware</span>
+    </div>
+
+    <div class="nav-right">
+      <button class="btn-game" id="btnGame">🎮 Videojuego</button>
+
+      <div class="nav-user">
+        <div class="nav-user-name" id="nombreUsuario">Cargando...</div>
+        <div class="nav-user-sub">Admin &nbsp;|&nbsp; Nivel 5 &nbsp;|&nbsp; Xp: 2500</div>
+      </div>
+
+      <button class="btn-logout" id="btnLogout">Cerrar sesión</button>
+    </div>
+  </nav>
+
+  <div class="content">
+    <div class="page-title">Estadísticas de los usuarios</div>
+
+    <div class="top-row">
+      <div class="controls">
+        <select class="select-periodo">
+          <option>Selecciona periodo</option>
+          <option>Enero 2026</option>
+          <option>Febrero 2026</option>
+          <option>Marzo 2026</option>
+        </select>
+        <button class="btn-stats">Ver estadísticas ∧</button>
+      </div>
+
+      <div class="metrics">
+        <div class="metric">
+          <div class="metric-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#BA7517" stroke-width="1.8">
+              <path d="M9 11l3 3L22 4"/>
+              <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>
+            </svg>
+          </div>
+          <div>
+            <div class="metric-label">Simulaciones</div>
+            <div class="metric-val">42</div>
+            <div class="metric-sub">completadas</div>
+          </div>
+        </div>
+
+        <div class="metric">
+          <div class="metric-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#BA7517" stroke-width="1.8">
+              <circle cx="12" cy="12" r="10"/>
+              <polyline points="12 6 12 12 16 14"/>
+            </svg>
+          </div>
+          <div>
+            <div class="metric-label">Duración prom.</div>
+            <div class="metric-val">09:49</div>
+            <div class="metric-sub">minutos</div>
+          </div>
+        </div>
+
+        <div class="metric">
+          <div class="metric-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#BA7517" stroke-width="1.8">
+              <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
+              <circle cx="9" cy="7" r="4"/>
+              <path d="M23 21v-2a4 4 0 00-3-3.87"/>
+              <path d="M16 3.13a4 4 0 010 7.75"/>
+            </svg>
+          </div>
+          <div>
+            <div class="metric-label">Jugadores totales</div>
+            <div class="metric-val">52</div>
+            <div class="metric-sub">registrados</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="main-grid">
+      <div class="card">
+        <div class="section-title">Top jugadores</div>
+        <div class="ranking-item"><div class="avatar">OW</div><div><div class="ranking-name">Olivia Wilson</div><div class="ranking-role">Admin</div></div><div class="ranking-pts">2000 pts</div></div>
+        <div class="ranking-item"><div class="avatar">OW</div><div><div class="ranking-name">Olivia Wilson</div><div class="ranking-role">Admin</div></div><div class="ranking-pts">1900 pts</div></div>
+        <div class="ranking-item"><div class="avatar">OW</div><div><div class="ranking-name">Olivia Wilson</div><div class="ranking-role">Admin</div></div><div class="ranking-pts">1800 pts</div></div>
+        <div class="ranking-item"><div class="avatar">OW</div><div><div class="ranking-name">Olivia Wilson</div><div class="ranking-role">Admin</div></div><div class="ranking-pts">1500 pts</div></div>
+        <div class="ranking-item"><div class="avatar">JP</div><div><div class="ranking-name">Dr. Jonathan P.</div><div class="ranking-role">Consultant</div></div><div class="ranking-pts">1350 pts</div></div>
+      </div>
+
+      <div class="card">
+        <div class="section-title">Tipos de usuarios</div>
+        <div style="position:relative;height:140px"><canvas id="pieChart"></canvas></div>
+        <div class="legend">
+          <span class="legend-item"><span class="legend-dot" style="background:#E8590C"></span>Empleados</span>
+          <span class="legend-item"><span class="legend-dot" style="background:#FAEEDA;border:1px solid #ddd"></span>Externos</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="section-title">Puntaje promedio</div>
+        <div style="position:relative;height:140px"><canvas id="lineChart"></canvas></div>
+      </div>
+
+      <div class="card">
+        <div class="section-title">Historial sesiones</div>
+        <div class="session-item"><div class="avatar blue">IE</div><div class="session-name">Isa Est.</div><div class="session-date">24/02/26</div></div>
+        <div class="session-item"><div class="avatar blue">CM</div><div class="session-name">Carlos Molina</div><div class="session-date">22/02/26</div></div>
+        <div class="session-item"><div class="avatar blue">SE</div><div class="session-name">Santiago Est.</div><div class="session-date">21/02/26</div></div>
+      </div>
+    </div>
+
+    <div class="bottom-grid">
+      <div class="card">
+        <div class="section-title">Desempeño por categoría</div>
+        <div style="position:relative;height:160px"><canvas id="barChart"></canvas></div>
+      </div>
+
+      <div class="card">
+        <div class="section-title">Desempeño por nivel</div>
+        <div style="position:relative;height:160px"><canvas id="lineChart2"></canvas></div>
+        <div class="legend">
+          <span class="legend-item"><span class="legend-dot" style="background:#378ADD"></span>Móvil</span>
+          <span class="legend-item"><span class="legend-dot" style="background:#E8590C"></span>Computadora</span>
+          <span class="legend-item"><span class="legend-dot" style="background:#639922"></span>Tablet</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script src="dashboard.js"></script>
+</body>
+</html>
