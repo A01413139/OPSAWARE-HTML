@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>OpsAware — Login</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;700;800&family=DM+Sans:wght@300;400;500&display=swap" />
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>OpsAware — Iniciar Sesión</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=VT323&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
 
@@ -15,35 +15,55 @@
 
       <aside class="side">
         <div class="brand">
-          <img src="logorockwell.png" alt="Rockwell Automation" class="brand-logo" />
-          <span class="brand-name">OpsAware</span>
+          <div class="brand-logo-wrap">
+            <img src="logorockwell.png" alt="OA" onerror="this.style.display='none'"/>
+          </div>
+          <span class="brand-name">OPSAWARE</span>
         </div>
-        <p class="tagline">Operaciones<br><span>bajo</span><br>control.</p>
+        <div class="side-body">
+          <p class="tagline"><span>OPS</span>AWARE</p>
+          <p class="tagline-sub">WAREHOUSE DEFENSE SYSTEM</p>
+          <div class="side-stats">
+            <div class="side-stat">
+              <div class="ss-val">52</div>
+              <div class="ss-lbl">Agentes activos</div>
+            </div>
+            <div class="side-stat">
+              <div class="ss-val">5</div>
+              <div class="ss-lbl">Niveles</div>
+            </div>
+            <div class="side-stat">
+              <div class="ss-val">342</div>
+              <div class="ss-lbl">Amenazas neutralizadas</div>
+            </div>
+          </div>
+        </div>
       </aside>
 
       <main class="main">
-        <div class="header">
+        <div class="form-tag">// AUTENTICACIÓN</div>
+        <div class="  header">
           <h1>Iniciar sesión</h1>
           <p>Ingresa tus credenciales para continuar</p>
         </div>
 
         <div class="field">
           <label for="username">Correo electrónico</label>
-          <input type="email" id="username" placeholder="hola@empresa.com" autocomplete="email" />
+          <input type="email" id="username" placeholder="correo@empresa.com" autocomplete="email"/>
         </div>
 
         <div class="field">
-          <label for="password">Clave</label>
-          <input type="password" id="password" placeholder="••••••••" autocomplete="current-password" />
+          <label for="password">Contraseña</label>
+          <input type="password" id="password" placeholder="••••••••" autocomplete="current-password"/>
         </div>
 
         <div id="msg" class="msg" role="alert" aria-live="polite"></div>
 
-        <button type="button" id="btnLogin" class="btn-primary">Iniciar sesión</button>
+        <button type="button" id="btnLogin" class="btn-primary">▶ ACCEDER AL SISTEMA</button>
 
         <div class="links">
-          <a href="#">¿No tienes cuenta? Registrarse</a>
-          <a href="#">¿Olvidaste contraseña?</a>
+          <a href="registro.html">¿No tienes cuenta? Registrarse</a>
+          <a href="home.html">← Inicio</a>
         </div>
       </main>
 

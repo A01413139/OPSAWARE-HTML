@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>OpsAware — Warehouse Defense</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=VT323&family=Press+Start+2P&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:     #0e1320;
+      --bg2:    #141d2e;
+      --orange: #e07b2a;
+      --orange2:#b85f18;
+      --teal:   #3d9e8c;
+      --ink:    #d4dde8;
+      --ink2:   #a8b8cc;
+      --ink3:   #7e8fa5;
+      --rule:   #1e2a3a;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Rajdhani', sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(224,123,42,0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(224,123,42,0.025) 1px, transparent 1px);
+      background-size: 32px 32px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .topbar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      height: 52px;
+      background: rgba(14,19,32,0.92);
+      border-bottom: 1px solid var(--rule);
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 28px;
+    }
+
+    .topbar-brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+
+    .topbar-logo {
+      width: 30px; height: 30px;
+      background: rgba(224,123,42,0.15);
+      border: 1px solid var(--orange2);
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    .topbar-logo img { width: 22px; height: 22px; object-fit: contain; }
+
+    .topbar-name {
+      font-family: 'VT323', monospace;
+      font-size: 20px;
+      color: var(--orange);
+      letter-spacing: 2px;
+    }
+
+    .topbar-right { display: flex; align-items: center; gap: 10px; }
+
+    .btn-nav {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      color: var(--ink2);
+      background: transparent;
+      border: 1px solid var(--rule);
+      padding: 7px 18px;
+      cursor: pointer;
+      transition: all 0.15s;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      text-transform: uppercase;
+    }
+
+    .btn-nav:hover { border-color: var(--orange2); color: var(--orange); }
+
+    .nav-user-name {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink);
+      letter-spacing: 0.5px;
+    }
+
+    .hero {
+      position: relative; z-index: 1;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center;
+      padding: 110px 24px 40px;
+    }
+
+    .hero-eyebrow {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 12px; letter-spacing: 4px; color: var(--teal);
+      text-transform: uppercase; margin-bottom: 16px;
+      display: flex; align-items: center; gap: 10px; justify-content: center; font-weight: 700;
+    }
+
+    .hero-eyebrow::before, .hero-eyebrow::after {
+      content: ''; width: 40px; height: 1px;
+      background: var(--teal); opacity: 0.5;
+    }
+
+    .hero-title {
+      font-family: 'VT323', monospace;
+      font-size: clamp(56px, 10vw, 100px);
+      color: var(--ink); letter-spacing: 4px; line-height: 0.9; margin-bottom: 8px;
+    }
+
+    .hero-title span { color: var(--orange); }
+
+    .hero-subtitle {
+      font-family: 'VT323', monospace;
+      font-size: clamp(18px, 3vw, 26px);
+      color: #b8c5d6; letter-spacing: 3px; margin-bottom: 36px;
+    }
+
+    .hero-desc {
+      max-width: 520px; font-size: 16px; font-weight: 500;
+      color: var(--ink2); line-height: 1.6; margin-bottom: 44px;
+    }
+
+    .hero-cta { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+
+    .btn-play {
+      font-family: 'VT323', monospace;
+      font-size: 22px; letter-spacing: 3px; color: #fff;
+      background: var(--orange); border: none; padding: 14px 36px;
+      cursor: pointer; transition: background 0.15s, transform 0.1s;
+      text-decoration: none; display: inline-block;
+      clip-path: polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%);
+    }
+
+    .btn-play:hover { background: var(--orange2); }
+    .btn-play:active { transform: scale(0.97); }
+
+    .btn-learn {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 14px; font-weight: 600; letter-spacing: 2px; color: var(--ink2);
+      background: transparent; border: 1px solid var(--rule);
+      padding: 14px 28px; cursor: pointer; transition: all 0.15s;
+      text-decoration: none; display: inline-block; text-transform: uppercase;
+    }
+
+    .btn-learn:hover { border-color: var(--ink); color: var(--ink); }
+
+    .pixel-row { display: flex; gap: 8px; justify-content: center; margin: 28px 0 0; opacity: 0.3; }
+    .px { width: 8px; height: 8px; background: var(--orange); }
+    .px:nth-child(even) { background: var(--teal); margin-top: 8px; }
+
+    .about {
+      position: relative; z-index: 1;
+      padding: 48px 24px 40px; max-width: 1100px; margin: 0 auto;
+    }
+
+    .section-label {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 12px; letter-spacing: 4px; color: var(--orange);
+      text-transform: uppercase; margin-bottom: 40px;
+      display: flex; align-items: center; gap: 12px; font-weight: 700;
+    }
+
+    .section-label::after { content: ''; flex: 1; height: 1px; background: var(--rule); }
+
+    .about-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 2px; margin-bottom: 0; }
+
+    .about-card {
+      background: var(--bg2); border: 1px solid var(--rule);
+      padding: 28px 24px; position: relative; transition: border-color 0.2s;
+    }
+
+    .about-card:hover { border-color: var(--orange2); }
+
+    .about-card::before {
+      content: ''; position: absolute; top: 0; left: 0;
+      height: 2px; background: var(--orange);
+    }
+
+    .about-card:nth-child(1)::before { width: 40%; }
+    .about-card:nth-child(2)::before { width: 70%; background: var(--teal); }
+    .about-card:nth-child(3)::before { width: 25%; }
+
+    .ac-num { font-family: 'VT323', monospace; font-size: 48px; color: rgba(224,123,42,0.45); line-height: 1; margin-bottom: 12px; }
+    .ac-ico { font-size: 26px; margin-bottom: 12px; }
+    .ac-title { font-family: 'VT323', monospace; font-size: 22px; color: var(--ink); letter-spacing: 1px; margin-bottom: 8px; }
+    .ac-desc { font-size: 14px; font-weight: 500; color: #b8c5d6; line-height: 1.6; }
+
+    /* ═══════════ PREVIEW SECTION ═══════════ */
+    .preview {
+      position: relative; z-index: 1;
+      padding: 24px 24px 80px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .preview-grid {
+      display: grid;
+      grid-template-columns: 1.6fr 1fr;
+      gap: 24px;
+      align-items: stretch;
+    }
+
+    .preview-frame {
+      background: var(--bg2);
+      border: 1px solid var(--rule);
+      position: relative;
+      overflow: hidden;
+      aspect-ratio: 16 / 9;
+    }
+
+    .preview-frame img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* HUD corners on preview */
+    .preview-corner {
+      position: absolute;
+      width: 18px; height: 18px;
+      border: 2px solid var(--orange);
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    .preview-corner.tl { top: 8px; left: 8px; border-right: none; border-bottom: none; }
+    .preview-corner.tr { top: 8px; right: 8px; border-left: none; border-bottom: none; }
+    .preview-corner.bl { bottom: 8px; left: 8px; border-right: none; border-top: none; }
+    .preview-corner.br { bottom: 8px; right: 8px; border-left: none; border-top: none; }
+
+    .preview-overlay {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      padding: 28px 24px 20px;
+      background: linear-gradient(
+        to top,
+        rgba(14,19,32,0.96) 0%,
+        rgba(14,19,32,0.7) 60%,
+        transparent 100%
+      );
+      z-index: 3;
+      pointer-events: none;
+    }
+
+    .preview-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      color: #5dca90;
+      text-transform: uppercase;
+      background: rgba(61,158,140,0.15);
+      border: 1px solid rgba(61,158,140,0.4);
+      padding: 4px 10px;
+      margin-bottom: 10px;
+    }
+
+    .preview-tag::before {
+      content: '';
+      width: 6px; height: 6px;
+      background: #5dca90;
+      border-radius: 50%;
+      box-shadow: 0 0 6px #5dca90;
+      animation: pv-pulse 1.6s ease-in-out infinite;
+    }
+
+    @keyframes pv-pulse {
+      0%, 100% { opacity: 1; }
+      50%      { opacity: 0.4; }
+    }
+
+    .preview-title {
+      font-family: 'VT323', monospace;
+      font-size: 26px;
+      color: var(--ink);
+      letter-spacing: 3px;
+      line-height: 1;
+    }
+
+    /* Side panel */
+    .preview-side {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .pv-head {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 11px;
+      letter-spacing: 3px;
+      color: var(--teal);
+      text-transform: uppercase;
+      margin-bottom: 8px;
+      font-weight: 700;
+    }
+
+    .pv-title {
+      font-family: 'VT323', monospace;
+      font-size: 32px;
+      color: var(--ink);
+      letter-spacing: 2px;
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+
+    .pv-title span { color: var(--orange); }
+
+    .pv-desc {
+      font-size: 14px;
+      font-weight: 500;
+      color: #b8c5d6;
+      line-height: 1.7;
+      margin-bottom: 20px;
+    }
+
+    .pv-feature {
+      background: var(--bg2);
+      border: 1px solid var(--rule);
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transition: border-color 0.2s;
+    }
+
+    .pv-feature:hover { border-color: var(--orange2); }
+
+    .pv-f-ico {
+      font-size: 18px;
+      width: 32px; height: 32px;
+      background: var(--bg);
+      border: 1px solid var(--orange2);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .pv-f-body { flex: 1; }
+
+    .pv-f-title {
+      font-family: 'VT323', monospace;
+      font-size: 15px;
+      color: var(--ink);
+      letter-spacing: 1px;
+      margin-bottom: 1px;
+    }
+
+    .pv-f-desc {
+      font-size: 12px;
+      color: #a8b8cc;
+      font-weight: 500;
+      line-height: 1.3;
+    }
+
+    .pv-cta {
+      margin-top: 16px;
+      font-family: 'VT323', monospace;
+      font-size: 17px;
+      letter-spacing: 3px;
+      color: var(--bg);
+      background: var(--orange);
+      border: none;
+      padding: 11px 18px;
+      cursor: pointer;
+      transition: background 0.12s;
+      text-decoration: none;
+      text-align: center;
+      display: block;
+      clip-path: polygon(5px 0%, 100% 0%, calc(100% - 5px) 100%, 0% 100%);
+    }
+
+    .pv-cta:hover { background: var(--orange2); color: #fff; }
+
+    /* ═══════════ FEATURES ═══════════ */
+    .features { position: relative; z-index: 1; padding: 0 24px 80px; max-width: 1100px; margin: 0 auto; }
+
+    .features-grid { display: grid; grid-template-columns: 1.4fr 1fr; gap: 2px; }
+
+    .feat-big {
+      background: var(--bg2); border: 1px solid var(--rule);
+      padding: 36px 32px; position: relative; overflow: hidden;
+    }
+
+
+
+    .feat-big-title { font-family: 'VT323', monospace; font-size: 32px; color: var(--ink); letter-spacing: 2px; margin-bottom: 14px; position: relative; z-index: 1; }
+    .feat-big-title span { color: var(--orange); }
+    .feat-big-desc { font-size: 15px; font-weight: 500; color: #b8c5d6; line-height: 1.7; max-width: 400px; margin-bottom: 28px; position: relative; z-index: 1; }
+
+    .stat-row { display: flex; gap: 32px; position: relative; z-index: 1; }
+    .stat-val { font-family: 'VT323', monospace; font-size: 36px; color: var(--orange); letter-spacing: 2px; line-height: 1; }
+    .stat-lbl { font-size: 12px; letter-spacing: 2px; color: #b8c5d6; text-transform: uppercase; margin-top: 4px; font-weight: 600; }
+
+    .feat-list { display: flex; flex-direction: column; gap: 2px; }
+
+    .feat-item {
+      background: var(--bg2); border: 1px solid var(--rule);
+      padding: 20px; display: flex; align-items: flex-start; gap: 14px; transition: border-color 0.2s;
+    }
+
+    .feat-item:hover { border-color: var(--orange2); }
+    .feat-ico { font-size: 20px; flex-shrink: 0; margin-top: 2px; }
+    .feat-title { font-family: 'VT323', monospace; font-size: 18px; color: var(--ink); letter-spacing: 1px; margin-bottom: 4px; }
+    .feat-desc { font-size: 13px; font-weight: 500; color: #b8c5d6; line-height: 1.5; }
+
+    /* ═══════════ FOOTER ═══════════ */
+    .footer {
+      position: relative; z-index: 1; border-top: 1px solid var(--rule);
+      padding: 24px 28px; display: flex; align-items: center; justify-content: space-between;
+    }
+
+    .footer-brand { font-family: 'VT323', monospace; font-size: 18px; color: var(--ink2); letter-spacing: 2px; }
+    .footer-brand span { color: var(--orange); }
+    .footer-text { font-size: 13px; color: #b8c5d6; letter-spacing: 1px; font-weight: 500; }
+
+    .footer-cta {
+      font-family: 'VT323', monospace; font-size: 16px; letter-spacing: 2px;
+      color: var(--orange); background: transparent; border: 1px solid var(--orange2);
+      padding: 8px 20px; cursor: pointer; text-decoration: none; transition: background 0.15s;
+    }
+
+    .footer-cta:hover { background: rgba(224,123,42,0.1); }
+
+    @keyframes fadeup {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .hero-eyebrow { animation: fadeup 0.5s ease 0.1s both; }
+    .hero-title   { animation: fadeup 0.5s ease 0.2s both; }
+    .hero-subtitle{ animation: fadeup 0.5s ease 0.3s both; }
+    .hero-desc    { animation: fadeup 0.5s ease 0.4s both; }
+    .hero-cta     { animation: fadeup 0.5s ease 0.5s both; }
+
+    @media (max-width: 900px) {
+      .preview-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 800px) {
+      .about-grid    { grid-template-columns: 1fr; }
+      .features-grid { grid-template-columns: 1fr; }
+      .stat-row      { gap: 20px; }
+    }
+
+    @media (max-width: 500px) {
+      .footer { flex-direction: column; gap: 12px; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="topbar">
+    <a href="home.html" class="topbar-brand">
+      <div class="topbar-logo">
+        <img src="logorockwell.png" alt="OA" onerror="this.style.display='none'"/>
+      </div>
+      <span class="topbar-name">OPSAWARE</span>
+    </a>
+    <div class="topbar-right" id="topbarRight"></div>
+  </header>
+
+  <section class="hero">
+    <div class="hero-eyebrow">Videojuego educativo · Ciberseguridad</div>
+    <h1 class="hero-title"><span>OPS</span>AWARE</h1>
+    <p class="hero-subtitle">WAREHOUSE DEFENSE SYSTEM</p>
+    <p class="hero-desc">
+      Protege almacenes digitales contra ataques cibernéticos. Responde preguntas,
+      sube de nivel y demuestra que eres el operador más preparado del equipo.
+    </p>
+    <div class="hero-cta">
+      <a href="index.html" id="btnJugar" class="btn-play">▶ JUGAR AHORA</a>
+      <a href="#about" class="btn-learn">¿Cómo funciona?</a>
+    </div>
+    <div class="pixel-row">
+      <div class="px"></div><div class="px"></div><div class="px"></div>
+      <div class="px"></div><div class="px"></div><div class="px"></div>
+      <div class="px"></div><div class="px"></div><div class="px"></div>
+    </div>
+  </section>
+
+  <section class="about" id="about">
+    <div class="section-label">Acerca del juego</div>
+    <div class="about-grid">
+      <div class="about-card">
+        <div class="ac-num">01</div>
+        <div class="ac-ico">🏭</div>
+        <div class="ac-title">El Warehouse</div>
+        <div class="ac-desc">Eres un operador de seguridad responsable de proteger servidores y sistemas críticos dentro de un almacén digital. Cada decisión cuenta.</div>
+      </div>
+      <div class="about-card">
+        <div class="ac-num">02</div>
+        <div class="ac-ico">🛡️</div>
+        <div class="ac-title">Las Amenazas</div>
+        <div class="ac-desc">Ataques, vulnerabilidades y brechas de seguridad aparecen en cada nivel. Responde preguntas correctamente para neutralizarlas antes de que sea tarde.</div>
+      </div>
+      <div class="about-card">
+        <div class="ac-num">03</div>
+        <div class="ac-ico">📈</div>
+        <div class="ac-title">Tu Progreso</div>
+        <div class="ac-desc">Gana XP, sube de nivel y compite en el ranking global. Cada misión completada te acerca a convertirte en Operador Élite.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ PREVIEW DEL JUEGO ═══ -->
+  <section class="preview">
+    <div class="section-label">Vista previa del juego</div>
+
+    <div class="preview-grid">
+
+      <!-- Imagen del juego con HUD -->
+      <div class="preview-frame">
+        <div class="preview-corner tl"></div>
+        <div class="preview-corner tr"></div>
+        <div class="preview-corner bl"></div>
+        <div class="preview-corner br"></div>
+        <img src="game-preview.png" alt="Vista previa del juego OpsAware"/>
+        <div class="preview-overlay">
+          <div class="preview-tag">● VISTA PREVIA VIDEOJUEGO</div>
+          <div class="preview-title">WAREHOUSE · NIVEL 1</div>
+        </div>
+      </div>
+
+      <!-- Panel lateral -->
+      <div class="preview-side">
+        <div class="pv-head">// EXPERIENCIA DE JUEGO</div>
+        <div class="pv-title">Vista <span>pixel-art</span> 2D</div>
+        <p class="pv-desc">
+          Explora el warehouse desde una vista superior. Controla a tu operador,
+          recolecta Security Coins y protege los sistemas críticos de ataques entrantes.
+        </p>
+
+        <div class="pv-feature">
+          <div class="pv-f-ico">🪙</div>
+          <div class="pv-f-body">
+            <div class="pv-f-title">Security Coins</div>
+            <div class="pv-f-desc">Gana recompensas al neutralizar amenazas.</div>
+          </div>
+        </div>
+
+        <div class="pv-feature">
+          <div class="pv-f-ico">⏱</div>
+          <div class="pv-f-body">
+            <div class="pv-f-title">Contra reloj</div>
+            <div class="pv-f-desc">Tienes 12 minutos por simulación.</div>
+          </div>
+        </div>
+
+        <div class="pv-feature">
+          <div class="pv-f-ico">🖥️</div>
+          <div class="pv-f-body">
+            <div class="pv-f-title">Sistemas críticos</div>
+            <div class="pv-f-desc">Protege servidores de ataques cibernéticos.</div>
+          </div>
+        </div>
+
+        <a href="index.html" class="pv-cta">▶ EMPEZAR MISIÓN</a>
+      </div>
+
+    </div>
+  </section>
+
+  <section class="features">
+    <div class="section-label">Por qué OpsAware</div>
+    <div class="features-grid">
+      <div class="feat-big">
+        <div class="feat-big-title">Aprende mientras <span>defiendes</span></div>
+        <p class="feat-big-desc">OpsAware combina mecánicas de videojuego con contenido real de ciberseguridad industrial. Cada pregunta está basada en escenarios del mundo real.</p>
+        <div class="stat-row">
+          <div class="stat-item"><div class="stat-val">5</div><div class="stat-lbl">Niveles</div></div>
+          <div class="stat-item"><div class="stat-val">3</div><div class="stat-lbl">Dificultades</div></div>
+          <div class="stat-item"><div class="stat-val">52</div><div class="stat-lbl">Operadores</div></div>
+        </div>
+      </div>
+      <div class="feat-list">
+        <div class="feat-item"><div class="feat-ico">🎮</div><div class="feat-body"><div class="feat-title">Pixel-art 2D</div><div class="feat-desc">Escenarios con vista superior, personaje propio y ambientación industrial.</div></div></div>
+        <div class="feat-item"><div class="feat-ico">🔗</div><div class="feat-body"><div class="feat-title">Conectado en tiempo real</div><div class="feat-desc">Tus resultados se guardan automáticamente y el ranking se actualiza al instante.</div></div></div>
+        <div class="feat-item"><div class="feat-ico">🏆</div><div class="feat-body"><div class="feat-title">Ranking global</div><div class="feat-desc">Compite contra todos los operadores del equipo. Solo el mejor llega al top.</div></div></div>
+        <div class="feat-item"><div class="feat-ico">📊</div><div class="feat-body"><div class="feat-title">Dashboard de estadísticas</div><div class="feat-desc">Ve tu progreso, misiones completadas y logros en el panel de control.</div></div></div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="footer-brand"><span>OPS</span>AWARE · 2026</div>
+    <div class="footer-text">TC2005B · Tecnológico de Monterrey</div>
+    <a href="registro.html" class="footer-cta" id="footerCta">CREAR CUENTA</a>
+  </footer>
+
+  <script>
+    const user = localStorage.getItem("loggedInUser");
+    const topbarRight = document.getElementById("topbarRight");
+
+    if (user) {
+      topbarRight.innerHTML = `
+        <span class="nav-user-name">${user}</span>
+        <a href="dashboard.html" class="btn-nav">Dashboard</a>
+        <button class="btn-nav" id="btnLogout">Cerrar sesión</button>
+      `;
+      document.getElementById("btnJugar").href = "dashboard.html";
+      document.getElementById("btnJugar").textContent = "▶ IR AL DASHBOARD";
+      document.getElementById("footerCta").href = "dashboard.html";
+      document.getElementById("footerCta").textContent = "IR AL DASHBOARD";
+
+      document.getElementById("btnLogout").addEventListener("click", () => {
+        localStorage.removeItem("loggedInUser");
+        localStorage.removeItem("user_id");
+        window.location.href = "home.html";
+      });
+    } else {
+      topbarRight.innerHTML = `
+        <a href="index.html" class="btn-nav">Iniciar sesión</a>
+      `;
+    }
+  </script>
+
+</body>
+</html>

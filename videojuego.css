@@ -1,0 +1,195 @@
+body {
+  font-family: 'Rajdhani', sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  margin: 0;
+  min-height: 100vh;
+}
+
+/* ── CONTENT ── */
+.vj-content {
+  position: relative;
+  z-index: 1;
+  padding: 20px 24px 32px;
+  max-width: 1500px;
+  margin: 0 auto;
+}
+
+/* ── BACK BUTTON ── */
+.btn-back {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--ink2);
+  background: transparent;
+  border: 1px solid var(--rule);
+  padding: 6px 14px;
+  cursor: pointer;
+  transition: all 0.15s;
+  margin-left: 4px;
+}
+
+.btn-back:hover {
+  border-color: var(--orange3);
+  color: var(--orange);
+}
+
+/* ── HEADER DEL JUEGO ── */
+.vj-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20px;
+  padding-bottom: 16px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid var(--rule);
+  position: relative;
+}
+
+.vj-header::before {
+  content: '';
+  position: absolute;
+  bottom: -1px; left: 0;
+  width: 180px; height: 1px;
+  background: var(--orange);
+}
+
+.vj-header-left { flex: 1; }
+
+.vj-tag {
+  font-size: 11px;
+  letter-spacing: 3px;
+  color: var(--teal);
+  text-transform: uppercase;
+  margin-bottom: 6px;
+  font-weight: 700;
+}
+
+.vj-title {
+  font-family: 'VT323', monospace;
+  font-size: 34px;
+  color: var(--ink);
+  letter-spacing: 4px;
+  line-height: 1;
+  margin-bottom: 6px;
+}
+
+.vj-sub {
+  font-size: 13px;
+  font-weight: 500;
+  color: #b8c5d6;
+  letter-spacing: 0.5px;
+}
+
+.vj-header-right {
+  display: flex;
+  gap: 2px;
+  flex-shrink: 0;
+}
+
+.vj-info-box {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--rule);
+  padding: 10px 16px;
+  text-align: center;
+  min-width: 110px;
+  position: relative;
+}
+
+.vj-info-box::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: var(--orange);
+}
+
+.vj-info-label {
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: #b8c5d6;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+  font-weight: 600;
+}
+
+.vj-info-val {
+  font-family: 'VT323', monospace;
+  font-size: 18px;
+  color: var(--orange);
+  letter-spacing: 2px;
+  line-height: 1;
+}
+
+.vj-status {
+  color: var(--c-green);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.vj-dot {
+  width: 7px; height: 7px;
+  background: var(--c-green);
+  border-radius: 50%;
+  box-shadow: 0 0 6px var(--c-green);
+  animation: vj-pulse 1.6s ease-in-out infinite;
+}
+
+@keyframes vj-pulse {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.4; }
+}
+
+/* ── FRAME WRAP ── */
+.vj-frame-wrap {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: transparent;
+  border: 1px solid var(--rule);
+  position: relative;
+  overflow: hidden;
+}
+
+.vj-frame-wrap iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  display: block;
+  background: transparent;
+}
+
+/* ── CORNERS HUD ── */
+.vj-corner {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border: 2px solid var(--orange);
+  z-index: 2;
+  pointer-events: none;
+}
+
+.vj-corner.tl { top: 6px; left: 6px; border-right: none; border-bottom: none; }
+.vj-corner.tr { top: 6px; right: 6px; border-left: none; border-bottom: none; }
+.vj-corner.bl { bottom: 6px; left: 6px; border-right: none; border-top: none; }
+.vj-corner.br { bottom: 6px; right: 6px; border-left: none; border-top: none; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 800px) {
+  .vj-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .vj-header-right { width: 100%; }
+
+  .vj-info-box { flex: 1; }
+}
+
+@media (max-width: 600px) {
+  .btn-back { font-size: 10px; padding: 5px 10px; }
+  .vj-title { font-size: 26px; }
+}

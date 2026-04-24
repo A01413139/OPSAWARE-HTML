@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>OpsAware — Crear Cuenta</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=VT323&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="style.css"/>
+  <link rel="stylesheet" href="registro.css"/>
+</head>
+<body>
+
+  <div class="page">
+    <div class="card">
+
+      <aside class="side">
+        <div class="brand">
+          <div class="brand-logo-wrap">
+            <img src="logorockwell.png" alt="OA" onerror="this.style.display='none'"/>
+          </div>
+          <span class="brand-name">OPSAWARE</span>
+        </div>
+        <div class="side-body">
+          <p class="tagline"><span>ÚNETE</span> AL EQUIPO</p>
+          <p class="tagline-sub">WAREHOUSE DEFENSE SYSTEM</p>
+          <div class="side-steps">
+            <div class="side-step"><span class="step-num">01</span><span class="step-text">Crea tu cuenta de operador</span></div>
+            <div class="side-step"><span class="step-num">02</span><span class="step-text">Accede al videojuego desde el dashboard</span></div>
+            <div class="side-step"><span class="step-num">03</span><span class="step-text">Completa misiones y sube en el ranking</span></div>
+          </div>
+        </div>
+      </aside>
+
+      <main class="main">
+        <div class="form-tag">// NUEVO AGENTE</div>
+        <div class="header">
+          <h1>Crear cuenta</h1>
+          <p>Completa el formulario para registrarte</p>
+        </div>
+
+        <div class="form-row">
+          <div class="field">
+            <label for="first_name">Nombre</label>
+            <input type="text" id="first_name" placeholder="Nombre"/>
+          </div>
+          <div class="field">
+            <label for="last_name">Apellido</label>
+            <input type="text" id="last_name" placeholder="Apellido"/>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="email">Correo electrónico</label>
+          <input type="email" id="email" placeholder="correo@empresa.com"/>
+        </div>
+
+        <div class="field">
+          <label for="role">Tipo de usuario</label>
+          <select id="role">
+            <option value="externo">Externo</option>
+            <option value="empleado">Empleado</option>
+            <option value="admin">Admin</option>
+          </select>
+        </div>
+
+        <div class="form-row">
+          <div class="field">
+            <label for="password">Contraseña</label>
+            <input type="password" id="password" placeholder="••••••••"/>
+          </div>
+          <div class="field">
+            <label for="password2">Confirmar</label>
+            <input type="password" id="password2" placeholder="••••••••"/>
+          </div>
+        </div>
+
+        <div id="msg" class="msg" role="alert" aria-live="polite"></div>
+
+        <button type="button" id="btnRegistrar" class="btn-primary">▶ REGISTRARME</button>
+
+        <div class="links">
+          <a href="index.html">¿Ya tienes cuenta? Inicia sesión</a>
+          <a href="home.html">← Inicio</a>
+        </div>
+      </main>
+
+    </div>
+  </div>
+
+  <script src="registro.js"></script>
+</body>
+</html>
