@@ -6,7 +6,6 @@ if (!user) {
   document.getElementById("nombreUsuario").textContent = user;
   document.getElementById("heroName").textContent      = user.toUpperCase();
   document.getElementById("rankMeAv").textContent      = initials;
-  document.getElementById("rankMeName").textContent    = user;
 }
 
 document.getElementById("btnLogout").addEventListener("click", () => {
@@ -32,6 +31,30 @@ document.getElementById("tabAdvanced").addEventListener("click", () => {
   document.getElementById("tabAdvanced").classList.add("active");
   document.getElementById("tabBasic").classList.remove("active");
 });
+
+document.querySelectorAll('.stat-card').forEach(card => {
+  card.addEventListener('mousemove', e => {
+    const rect = card.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width) * 100;
+    const y = ((e.clientY - rect.top) / rect.height) * 100;
+    card.style.setProperty('--mx', x + '%');
+    card.style.setProperty('--my', y + '%');
+  });
+});
+
+function animarCounter(el, valor) {
+  const target = Number(valor) || 0;
+  const inicio = Number(el.textContent) || 0;
+  const duracion = 900;
+  const t0 = performance.now();
+  function step(t) {
+    const p = Math.min((t - t0) / duracion, 1);
+    const eased = 1 - Math.pow(1 - p, 3);
+    el.textContent = Math.round(inicio + (target - inicio) * eased);
+    if (p < 1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
 
 let graficas = {};
 
@@ -71,23 +94,26 @@ async function cargarEstadisticas() {
     if (real && real.jugadores > 0) data = real;
   } catch (e) {}
 
-  document.getElementById("metricNivel").textContent     = data.nivelMax  || DUMMY.nivelMax;
-  document.getElementById("metricCorrectas").textContent = data.correctas || DUMMY.correctas;
-  document.getElementById("metricJugadores").textContent = data.jugadores || DUMMY.jugadores;
+  animarCounter(document.getElementById("metricNivel"),     data.nivelMax  || DUMMY.nivelMax);
+  animarCounter(document.getElementById("metricCorrectas"), data.correctas || DUMMY.correctas);
+  animarCounter(document.getElementById("metricJugadores"), data.jugadores || DUMMY.jugadores);
 
   const cardRanking = document.getElementById("cardRanking");
   const rankingData = data.ranking?.length > 0 ? data.ranking : DUMMY.ranking;
+  const maxPts = Math.max(...rankingData.map(j => j.total));
+
   cardRanking.innerHTML = '<div class="gcard-title">TOP AGENTES</div>';
   rankingData.forEach((j, i) => {
     const cls = i===0?'gold':i===1?'silver':i===2?'bronze':'';
     const ini = (j.first_name[0]+j.last_name[0]).toUpperCase();
+    const pct = Math.round((j.total / maxPts) * 100);
     cardRanking.innerHTML += `
       <div class="rank-row ${cls}">
         <div class="rank-pos">${i+1}</div>
         <div class="rank-av">${ini}</div>
         <div class="rank-info">
           <div class="rank-n">${j.first_name} ${j.last_name}</div>
-          <div class="rank-l">Nivel ${j.nivel||1}</div>
+          <div class="rank-bar"><span style="width:${pct}%"></span></div>
         </div>
         <div class="rank-pts">${j.total}</div>
       </div>`;
@@ -132,32 +158,114 @@ function actualizarGraficas(data) {
 
 function iniciarGraficas() {
   const sc = {
-    x:{ticks:{color:'#526070',font:{size:9,family:"'Rajdhani'"}},grid:{color:'rgba(30,42,58,0.8)'}},
-    y:{ticks:{color:'#526070',font:{size:9,family:"'Rajdhani'"}},grid:{color:'rgba(30,42,58,0.8)'}}
+    x: {
+      ticks: { color: '#c8d4e4', font: { size: 10, family: "'Rajdhani'", weight: 600 } },
+      grid:  { color: 'rgba(103,184,207,0.08)', drawBorder: false }
+    },
+    y: {
+      ticks: { color: '#c8d4e4', font: { size: 10, family: "'Rajdhani'", weight: 600 } },
+      grid:  { color: 'rgba(103,184,207,0.08)', drawBorder: false }
+    }
   };
 
-  graficas.pie = new Chart(document.getElementById('pieChart'),{
-    type:'doughnut',
-    data:{labels:['LV1','LV2','LV3','LV4','LV5'],datasets:[{data:[18,24,31,20,12],backgroundColor:['rgba(250,238,218,0.75)','#EF9F27','#E8590C','#A8380A','#6b1f03'],borderWidth:1,borderColor:'#141d2e'}]},
-    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},cutout:'62%'}
+  const glowPlugin = {
+    id: 'glow',
+    beforeDatasetDraw(chart, args) {
+      const { ctx } = chart;
+      const ds = chart.data.datasets[args.index];
+      if (ds.glow) {
+        ctx.save();
+        ctx.shadowBlur = 14;
+        ctx.shadowColor = ds.borderColor || ds.backgroundColor;
+      }
+    },
+    afterDatasetDraw(chart) { chart.ctx.restore(); }
+  };
+
+  Chart.register(glowPlugin);
+
+  graficas.pie = new Chart(document.getElementById('pieChart'), {
+    type: 'doughnut',
+    data: {
+      labels: ['LV1','LV2','LV3','LV4','LV5'],
+      datasets: [{
+        data: [18,24,31,20,12],
+        backgroundColor: ['rgba(250,238,218,0.75)','#EF9F27','#E8590C','#A8380A','#6b1f03'],
+        borderWidth: 2,
+        borderColor: '#0e1525',
+        hoverOffset: 12
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      cutout: '55%',
+      animation: { animateRotate: true, duration: 1200 }
+    }
   });
 
-  graficas.line = new Chart(document.getElementById('lineChart'),{
-    type:'line',
-    data:{labels:['LV1','LV2','LV3','LV4','LV5'],datasets:[{data:[82,75,68,61,54],borderColor:'#e07b2a',backgroundColor:'rgba(224,123,42,0.07)',tension:0.3,fill:true,pointRadius:3,borderWidth:1.5,pointBackgroundColor:'#e07b2a',pointBorderColor:'#141d2e',pointBorderWidth:1}]},
-    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:sc.x,y:{...sc.y,min:0,max:100}}}
+  graficas.line = new Chart(document.getElementById('lineChart'), {
+    type: 'line',
+    data: {
+      labels: ['LV1','LV2','LV3','LV4','LV5'],
+      datasets: [{
+        data: [82,75,68,61,54],
+        borderColor: '#e07b2a',
+        backgroundColor: 'rgba(224,123,42,0.15)',
+        tension: 0.4, fill: true,
+        pointRadius: 5, pointHoverRadius: 8,
+        borderWidth: 2.5,
+        pointBackgroundColor: '#e07b2a',
+        pointBorderColor: '#0e1525',
+        pointBorderWidth: 2,
+        glow: true
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: { x: sc.x, y: { ...sc.y, min: 0, max: 100 } }
+    }
   });
 
-  graficas.bar = new Chart(document.getElementById('barChart'),{
-    type:'bar',
-    data:{labels:['FÁCIL','MEDIO','DIFÍCIL'],datasets:[{label:'Neutralizadas',data:[145,112,85],backgroundColor:'rgba(61,158,140,0.75)',borderRadius:2},{label:'Brechas',data:[38,64,91],backgroundColor:'rgba(192,64,64,0.75)',borderRadius:2}]},
-    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:sc}
+  graficas.bar = new Chart(document.getElementById('barChart'), {
+    type: 'bar',
+    data: {
+      labels: ['FÁCIL','MEDIO','DIFÍCIL'],
+      datasets: [
+        { label: 'Neutralizadas', data: [145,112,85], backgroundColor: 'rgba(61,158,140,0.85)', borderRadius: 3, borderColor: 'rgba(93,202,144,0.5)', borderWidth: 1 },
+        { label: 'Brechas',       data: [38,64,91],   backgroundColor: 'rgba(192,64,64,0.85)',  borderRadius: 3, borderColor: 'rgba(239,85,85,0.5)',   borderWidth: 1 }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: sc
+    }
   });
 
-  graficas.line2 = new Chart(document.getElementById('lineChart2'),{
-    type:'line',
-    data:{labels:['LV1','LV2','LV3','LV4','LV5'],datasets:[{data:[18,24,31,20,12],borderColor:'#3d9e8c',backgroundColor:'rgba(61,158,140,0.07)',tension:0.3,fill:true,pointRadius:3,borderWidth:1.5,pointBackgroundColor:'#3d9e8c',pointBorderColor:'#141d2e',pointBorderWidth:1}]},
-    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:sc}
+  graficas.line2 = new Chart(document.getElementById('lineChart2'), {
+    type: 'line',
+    data: {
+      labels: ['LV1','LV2','LV3','LV4','LV5'],
+      datasets: [{
+        data: [18,24,31,20,12],
+        borderColor: '#67b8cf',
+        backgroundColor: 'rgba(103,184,207,0.15)',
+        tension: 0.4, fill: true,
+        pointRadius: 5, pointHoverRadius: 8,
+        borderWidth: 2.5,
+        pointBackgroundColor: '#67b8cf',
+        pointBorderColor: '#0e1525',
+        pointBorderWidth: 2,
+        glow: true
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: sc
+    }
   });
 }
 

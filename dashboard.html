@@ -5,16 +5,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>OpsAware — Panel de Control</title>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
-  <link href="https://fonts.googleapis.com/css2?family=VT323&family=Bebas+Neue&family=Rajdhani:wght@400;500;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=VT323&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="dashboard.css"/>
 </head>
 <body>
 
+  <div class="scanlines"></div>
+
+
+  
   <nav class="nav">
     <div class="nav-left">
-      <a href="home.html" style="display:flex;align-items:center;gap:10px;text-decoration:none;">
+      <a href="home.html" class="nav-brand">
         <div class="nav-logo">
-          <img src="logorockwell.png" alt="Logo" style="width:28px;height:28px;object-fit:contain;">
+          <img src="logorockwell.png" alt="Logo">
         </div>
         <span class="nav-title">OpsAware</span>
       </a>
@@ -27,7 +31,7 @@
       <button class="btn-game" id="btnGame">▶ JUGAR</button>
       <div class="nav-user">
         <div class="nav-user-name" id="nombreUsuario">Cargando...</div>
-        <div class="nav-user-sub">NIVEL 5 &nbsp;·&nbsp; 2500 XP</div>
+        <div class="nav-user-sub">NIVEL 5 · 2500 XP</div>
       </div>
       <button class="btn-logout" id="btnLogout">Cerrar sesión</button>
     </div>
@@ -37,12 +41,12 @@
 
     <div class="hero-banner">
       <div class="hero-content">
-        <div class="hero-rank">RANGO #3</div>
+        <div class="hero-rank">▸ RANGO #3 · OPERATIVO</div>
         <div class="hero-name" id="heroName">HÉCTOR FERNÁNDEZ</div>
         <div class="hero-role">OPERADOR · EMPLEADO</div>
         <div class="hero-xp-wrap">
           <div class="hero-xp-bar-labels">
-            <span>XP</span>
+            <span>XP ACUMULADO</span>
             <span id="heroXpLabel">2500 / 3000 — NIVEL 5</span>
           </div>
           <div class="hero-xp-bar">
@@ -53,6 +57,7 @@
           </div>
         </div>
       </div>
+
       <div class="hero-badge-zone">
         <div class="hero-badge-box">
           <div class="hbb-label">MISIONES</div>
@@ -77,7 +82,7 @@
           <div class="stat-card-val pixel-num" id="myPartidas">12</div>
           <div class="stat-card-label">PARTIDAS</div>
         </div>
-        <div class="stat-card c2">
+        <div class="stat-card c2 big">
           <div class="stat-card-icon">⭐</div>
           <div class="stat-card-val pixel-num" id="myBestScore">950</div>
           <div class="stat-card-label">MEJOR PUNTAJE</div>
@@ -142,31 +147,46 @@
           <div class="rank-row gold">
             <div class="rank-pos">1</div>
             <div class="rank-av">RE</div>
-            <div class="rank-info"><div class="rank-n">Regina Elizabeth</div><div class="rank-l">Nivel 5</div></div>
+            <div class="rank-info">
+              <div class="rank-n">Regina Elizabeth</div>
+              <div class="rank-bar"><span style="width:100%"></span></div>
+            </div>
             <div class="rank-pts">2000</div>
           </div>
           <div class="rank-row silver">
             <div class="rank-pos">2</div>
             <div class="rank-av">DV</div>
-            <div class="rank-info"><div class="rank-n">Daniella Vazquez</div><div class="rank-l">Nivel 4</div></div>
+            <div class="rank-info">
+              <div class="rank-n">Daniella Vazquez</div>
+              <div class="rank-bar"><span style="width:95%"></span></div>
+            </div>
             <div class="rank-pts">1900</div>
           </div>
           <div class="rank-row bronze me">
             <div class="rank-pos">3</div>
             <div class="rank-av" id="rankMeAv">HF</div>
-            <div class="rank-info"><div class="rank-n" id="rankMeName">Hector Fernandez</div><div class="rank-l">Nivel 4 · TÚ</div></div>
+            <div class="rank-info">
+              <div class="rank-n" id="rankMeName">Hector Fernandez <span class="you-tag">TÚ</span></div>
+              <div class="rank-bar"><span style="width:90%"></span></div>
+            </div>
             <div class="rank-pts">1800</div>
           </div>
           <div class="rank-row">
             <div class="rank-pos">4</div>
             <div class="rank-av">DG</div>
-            <div class="rank-info"><div class="rank-n">Daniel Gonzalez</div><div class="rank-l">Nivel 3</div></div>
+            <div class="rank-info">
+              <div class="rank-n">Daniel Gonzalez</div>
+              <div class="rank-bar"><span style="width:75%"></span></div>
+            </div>
             <div class="rank-pts">1500</div>
           </div>
           <div class="rank-row">
             <div class="rank-pos">5</div>
             <div class="rank-av">FR</div>
-            <div class="rank-info"><div class="rank-n">Fernando Robles</div><div class="rank-l">Nivel 3</div></div>
+            <div class="rank-info">
+              <div class="rank-n">Fernando Robles</div>
+              <div class="rank-bar"><span style="width:67%"></span></div>
+            </div>
             <div class="rank-pts">1350</div>
           </div>
         </div>
@@ -202,6 +222,7 @@
   <div id="panelAdvanced" class="panel">
 
     <div class="adv-header">
+
       <div class="adv-title">ESTADÍSTICAS AVANZADAS</div>
       <div class="adv-metrics">
         <div class="adv-metric c1">
@@ -227,17 +248,12 @@
 
       <div class="gcard" id="cardRanking">
         <div class="gcard-title">TOP AGENTES</div>
-        <div class="rank-row gold"><div class="rank-pos">1</div><div class="rank-av">RE</div><div class="rank-info"><div class="rank-n">Regina Elizabeth</div><div class="rank-l">Nivel 5</div></div><div class="rank-pts">2000</div></div>
-        <div class="rank-row silver"><div class="rank-pos">2</div><div class="rank-av">DV</div><div class="rank-info"><div class="rank-n">Daniella Vazquez</div><div class="rank-l">Nivel 4</div></div><div class="rank-pts">1900</div></div>
-        <div class="rank-row bronze"><div class="rank-pos">3</div><div class="rank-av">HF</div><div class="rank-info"><div class="rank-n">Hector Fernandez</div><div class="rank-l">Nivel 4</div></div><div class="rank-pts">1800</div></div>
-        <div class="rank-row"><div class="rank-pos">4</div><div class="rank-av">DG</div><div class="rank-info"><div class="rank-n">Daniel Gonzalez</div><div class="rank-l">Nivel 3</div></div><div class="rank-pts">1500</div></div>
-        <div class="rank-row"><div class="rank-pos">5</div><div class="rank-av">FR</div><div class="rank-info"><div class="rank-n">Fernando Robles</div><div class="rank-l">Nivel 3</div></div><div class="rank-pts">1350</div></div>
       </div>
 
       <div class="gcard">
         <div class="gcard-title">MISIONES POR NIVEL</div>
-        <div style="position:relative;height:180px"><canvas id="pieChart"></canvas></div>
-        <div class="legend" style="margin-top:10px">
+        <div style="position:relative;height:200px"><canvas id="pieChart"></canvas></div>
+        <div class="legend" style="margin-top:12px">
           <span class="legend-item"><span class="legend-dot" style="background:#FAEEDA;border:1px solid #999"></span>Nv 1</span>
           <span class="legend-item"><span class="legend-dot" style="background:#EF9F27"></span>Nv 2</span>
           <span class="legend-item"><span class="legend-dot" style="background:#E8590C"></span>Nv 3</span>
@@ -248,20 +264,17 @@
 
       <div class="gcard">
         <div class="gcard-title">% PRECISIÓN POR NIVEL</div>
-        <div style="position:relative;height:180px"><canvas id="lineChart"></canvas></div>
+        <div style="position:relative;height:200px"><canvas id="lineChart"></canvas></div>
       </div>
 
       <div class="gcard" id="cardHistorial">
         <div class="gcard-title">ACTIVIDAD RECIENTE</div>
-        <div class="rank-row"><div class="rank-av">RE</div><div class="rank-info"><div class="rank-n">Regina Elizabeth</div><div class="rank-l">Nv. 5 — 20/04/26</div></div><div class="rank-pts">950</div></div>
-        <div class="rank-row"><div class="rank-av">DV</div><div class="rank-info"><div class="rank-n">Daniella Vazquez</div><div class="rank-l">Nv. 4 — 19/04/26</div></div><div class="rank-pts">870</div></div>
-        <div class="rank-row"><div class="rank-av">HF</div><div class="rank-info"><div class="rank-n">Hector Fernandez</div><div class="rank-l">Nv. 4 — 18/04/26</div></div><div class="rank-pts">850</div></div>
       </div>
 
       <div class="gcard">
         <div class="gcard-title">NEUTRALIZADAS VS BRECHAS</div>
-        <div style="position:relative;height:180px"><canvas id="barChart"></canvas></div>
-        <div class="legend" style="margin-top:8px">
+        <div style="position:relative;height:200px"><canvas id="barChart"></canvas></div>
+        <div class="legend" style="margin-top:10px">
           <span class="legend-item"><span class="legend-dot" style="background:#3d9e8c"></span>Neutralizadas</span>
           <span class="legend-item"><span class="legend-dot" style="background:#c04040"></span>Brechas</span>
         </div>
@@ -269,7 +282,7 @@
 
       <div class="gcard">
         <div class="gcard-title">PROGRESIÓN POR ESCENARIO</div>
-        <div style="position:relative;height:180px"><canvas id="lineChart2"></canvas></div>
+        <div style="position:relative;height:200px"><canvas id="lineChart2"></canvas></div>
       </div>
 
     </div>
