@@ -92,49 +92,62 @@ async function cargarEstadisticas() {
     const res  = await fetch("http://localhost:8080/estadisticas");
     const real = await res.json();
     if (real && real.jugadores > 0) data = real;
-  } catch (e) {}
+  } catch (e) {
+    console.log("Usando datos demo");
+  }
+
+  // Asegurar que los datos tengan estructura correcta
+  if (!data.ranking) data.ranking = DUMMY.ranking;
+  if (!data.historial) data.historial = DUMMY.historial;
 
   animarCounter(document.getElementById("metricNivel"),     data.nivelMax  || DUMMY.nivelMax);
   animarCounter(document.getElementById("metricCorrectas"), data.correctas || DUMMY.correctas);
   animarCounter(document.getElementById("metricJugadores"), data.jugadores || DUMMY.jugadores);
 
+  // TOP AGENTES
   const cardRanking = document.getElementById("cardRanking");
-  const rankingData = data.ranking?.length > 0 ? data.ranking : DUMMY.ranking;
-  const maxPts = Math.max(...rankingData.map(j => j.total));
+  if (cardRanking) {
+    const rankingData = data.ranking && data.ranking.length > 0 ? data.ranking : DUMMY.ranking;
+    const maxPts = Math.max(...rankingData.map(j => j.total));
 
-  cardRanking.innerHTML = '<div class="gcard-title">TOP AGENTES</div>';
-  rankingData.forEach((j, i) => {
-    const cls = i===0?'gold':i===1?'silver':i===2?'bronze':'';
-    const ini = (j.first_name[0]+j.last_name[0]).toUpperCase();
-    const pct = Math.round((j.total / maxPts) * 100);
-    cardRanking.innerHTML += `
-      <div class="rank-row ${cls}">
-        <div class="rank-pos">${i+1}</div>
-        <div class="rank-av">${ini}</div>
-        <div class="rank-info">
-          <div class="rank-n">${j.first_name} ${j.last_name}</div>
-          <div class="rank-bar"><span style="width:${pct}%"></span></div>
-        </div>
-        <div class="rank-pts">${j.total}</div>
-      </div>`;
-  });
+    let rankingHtml = '<div class="gcard-title">TOP AGENTES</div>';
+    rankingData.forEach((j, i) => {
+      const cls = i===0?'gold':i===1?'silver':i===2?'bronze':'';
+      const ini = (j.first_name[0]+j.last_name[0]).toUpperCase();
+      const pct = Math.round((j.total / maxPts) * 100);
+      rankingHtml += `
+        <div class="rank-row ${cls}">
+          <div class="rank-pos">${i+1}</div>
+          <div class="rank-av">${ini}</div>
+          <div class="rank-info">
+            <div class="rank-n">${j.first_name} ${j.last_name}</div>
+            <div class="rank-bar"><span style="width:${pct}%"></span></div>
+          </div>
+          <div class="rank-pts">${j.total}</div>
+        </div>`;
+    });
+    cardRanking.innerHTML = rankingHtml;
+  }
 
+  // ACTIVIDAD RECIENTE
   const cardHistorial = document.getElementById("cardHistorial");
-  const historialData = data.historial?.length > 0 ? data.historial : DUMMY.historial;
-  cardHistorial.innerHTML = '<div class="gcard-title">ACTIVIDAD RECIENTE</div>';
-  historialData.forEach(s => {
-    const ini   = (s.first_name[0]+s.last_name[0]).toUpperCase();
-    const fecha = new Date(s.fecha).toLocaleDateString("es-MX",{day:"2-digit",month:"2-digit",year:"2-digit"});
-    cardHistorial.innerHTML += `
-      <div class="rank-row">
-        <div class="rank-av">${ini}</div>
-        <div class="rank-info">
-          <div class="rank-n">${s.first_name} ${s.last_name}</div>
-          <div class="rank-l">Nv. ${s.nivel_alcanzado||1} — ${fecha}</div>
-        </div>
-        <div class="rank-pts">${s.puntaje}</div>
-      </div>`;
-  });
+  if (cardHistorial) {
+    const historialData = data.historial && data.historial.length > 0 ? data.historial : DUMMY.historial;
+    cardHistorial.innerHTML = '<div class="gcard-title">ACTIVIDAD RECIENTE</div>';
+    historialData.forEach(s => {
+      const ini   = (s.first_name[0]+s.last_name[0]).toUpperCase();
+      const fecha = new Date(s.fecha).toLocaleDateString("es-MX",{day:"2-digit",month:"2-digit",year:"2-digit"});
+      cardHistorial.innerHTML += `
+        <div class="rank-row">
+          <div class="rank-av">${ini}</div>
+          <div class="rank-info">
+            <div class="rank-n">${s.first_name} ${s.last_name}</div>
+            <div class="rank-l">Nv. ${s.nivel_alcanzado||1} — ${fecha}</div>
+          </div>
+          <div class="rank-pts">${s.puntaje}</div>
+        </div>`;
+    });
+  }
 
   actualizarGraficas(data);
 }

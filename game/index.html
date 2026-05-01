@@ -9,8 +9,8 @@
   </head>
   <body>
     <div id="unity-container" class="unity-desktop">
-      <canvas id="unity-canvas" tabindex="-1"></canvas>      
-        <div id="unity-loading-bar">
+      <canvas id="unity-canvas" width=960 height=600 tabindex="-1"></canvas>
+      <div id="unity-loading-bar">
         <div id="unity-logo"></div>
         <div id="unity-progress-bar-empty">
           <div id="unity-progress-bar-full"></div>
@@ -125,23 +125,7 @@
                 alert(message);
               });
             };
-          
-          function resizeUnityCanvas() {
-  const container = document.querySelector("#unity-container");
-  const canvas = document.querySelector("#unity-canvas");
 
-  const width = container.clientWidth;
-  const height = container.clientHeight;
-
-  canvas.style.width = width + "px";
-  canvas.style.height = height + "px";
-
-  canvas.width = width;
-  canvas.height = height;
-}
-
-window.addEventListener("resize", resizeUnityCanvas);
-resizeUnityCanvas();
       document.body.appendChild(script);
 
     </script>
